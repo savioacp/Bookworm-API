@@ -17,7 +17,7 @@ Create table tblProduto(
 	Fileira int not null,
 	Prateleira int not null,
 	TipoProduto varchar(50),
-	Editora varchar(50),
+	Editora varchar(50),	
 )
 
 Create table tblFuncionario(
@@ -25,7 +25,7 @@ Create table tblFuncionario(
 	Nome varchar(50) not null,
 	CPF char(11) not null, 
 	Endereco varchar (50) not null,
-	Telefone int not null,
+	Telefone varchar(11) not null,
 	Cargo varchar(50),
 	Email varchar(50),
 	NivelAcesso int not null,
@@ -35,7 +35,7 @@ Create table tblFuncionario(
 Create table tblEvento(
 	IDEvento int identity primary key,
 	Titulo varchar(50) not null,
-	Descricao varchar(200),
+	Descricao varchar(max),
 	Responsavel varchar (50),
 	Email varchar(50),
 )
@@ -70,4 +70,4 @@ Create table tblReserva(
 )
 
 insert tblEvento values ('Palestra 1', 'Palestra de testes para testar', 'Sávio Alves', 'savioacp@gmail.com'),
-						('Palestra 2', 'Palestra de testes segunda', 'Saulo Aulo', 'savioacpacp@gmail.com')
+						('Coronavírus', 'Sober o coronavirus, o que é? de onde veio? como é? de onde é? quando é?', 'Saulo Aulo', 'savioacpacp@gmail.com')

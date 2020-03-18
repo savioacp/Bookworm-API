@@ -9,7 +9,7 @@ namespace Bookworm_API.Models
 {
     public class Evento
     {
-        public int IdEvento { get; set; }
+        public int Id { get; set; }
         public string Titulo { get; set; }
         public string Descrição { get; set; }
         public string Responsável { get; set; }
@@ -25,13 +25,13 @@ namespace Bookworm_API.Models
             
             List<Evento> eventos = new List<Evento>();
 
-            var dt = Data.DbManager.CurrentInstance.Execute(command);
+            DataTable dt = Data.DbManager.CurrentInstance.Execute(command);
 
             foreach (DataRow row in dt.Rows)
             {
                 eventos.Add(new Evento()
                 {
-                    IdEvento = (int)row["IDEvento"],
+                    Id = (int)row["IDEvento"],
                     Titulo = row["Titulo"].ToString(),
                     Descrição = row["Descricao"].ToString(),
                     Responsável = row["Responsavel"].ToString(),
