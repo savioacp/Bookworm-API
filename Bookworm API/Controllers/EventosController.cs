@@ -24,21 +24,66 @@ namespace Bookworm_API.Controllers
             return Json(e.Add());
         }
 
+
         // GET /eventos/{id}
         public JsonResult<object> Get(int id)
         {
             try
             {
-                return Json((object)Evento.GetEvento(id));
+                return Json(Evento.GetEvento(id) as object);
             }
             catch (IndexOutOfRangeException)
             {
-                return Json((object) new
+                return Json(new
                 {
                     Error = 404,
                     Message = "Evento não encontrado"
-                });
+                } as object);
             }
+        }
+
+        // PUT /eventos/{id}
+        public JsonResult<object> Put(int id, Evento e)
+        {
+            try
+            {
+                Evento _e = Evento.GetEvento(id);
+                _e.Titulo = e.Titulo ?? _e.Titulo;
+                _e.Descrição = e.Descrição ?? _e.Descrição;
+                _e.Email = e.Email ?? _e.Email;
+                _e.Responsável = e.Responsável ?? _e.Responsável;
+
+                return Json(_e.Commit() as object);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return Json(new
+                {
+                    Error=404,
+                    Message="Evento não encontrado"
+                } as object);
+            }
+        }
+
+        // DELETE /eventos/{id}
+        public StatusCodeResult Delete(int id)
+        {
+            try
+            {
+                Evento.GetEvento(id).Delete();
+                return StatusCode(HttpStatusCode.OK);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return StatusCode(HttpStatusCode.NotFound);
+            }
+        }
+
+        // GET /eventos/search/{q}
+        [Route("eventos/search/{q}")]
+        public JsonResult<Evento[]> Get(string q)
+        {
+            return Json(Evento.GetEventos(q));
         }
     }
 }

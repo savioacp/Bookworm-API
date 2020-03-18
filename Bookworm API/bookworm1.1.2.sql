@@ -71,3 +71,5 @@ Create table tblReserva(
 
 insert tblEvento values ('Palestra 1', 'Palestra de testes para testar', 'Sávio Alves', 'savioacp@gmail.com'),
 						('Coronavírus', 'Sobre o coronavirus, o que é? de onde veio? como é? de onde é? quando é?', 'Saulo Aulo', 'savioacpacp@gmail.com')
+
+select * from tblEvento where Titulo like '%Coro%'
