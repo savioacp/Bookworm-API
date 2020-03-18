@@ -16,5 +16,11 @@ namespace Bookworm_API.Controllers
         {
             return Json(Evento.GetEventos());
         }
+
+        //POST /eventos
+        public JsonResult<Evento> Post(Evento e)
+        {
+            return Json(e.Add());
+        }
     }
 }

@@ -15,6 +15,26 @@ namespace Bookworm_API.Models
         public string Responsável { get; set; }
         public string Email { get; set; }
 
+        public Evento Add()
+        {
+            SqlCommand command = new SqlCommand()
+            {
+                CommandText = "insert tblEvento output INSERTED.IDEvento values (@Titulo, @Descricao, @Responsavel, @Email)"
+            };
+
+            command.Parameters.Add("@Titulo", SqlDbType.VarChar).Value = Titulo;
+            command.Parameters.Add("@Descricao", SqlDbType.VarChar).Value = Descrição;
+            command.Parameters.Add("@Responsavel", SqlDbType.VarChar).Value = Responsável;
+            command.Parameters.Add("@Email", SqlDbType.VarChar).Value = Email;
+
+            Id = (int) Data.DbManager.CurrentInstance.ExecuteScalar(command);
+
+            return this;
+        }
+
+
+        
+
         public static Evento[] GetEventos()
         {
             
