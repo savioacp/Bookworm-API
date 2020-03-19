@@ -24,7 +24,7 @@ Create table tblFuncionario(
 	IDFuncionario int identity primary key,
 	Nome varchar(50) not null,
 	CPF char(11) not null, 
-	Endereco varchar (50) not null,
+	Endereco varchar (100) not null,
 	Telefone varchar(11) not null,
 	Cargo varchar(50),
 	Email varchar(50),
@@ -71,5 +71,8 @@ Create table tblReserva(
 
 insert tblEvento values ('Palestra 1', 'Palestra de testes para testar', 'Sávio Alves', 'savioacp@gmail.com'),
 						('Coronavírus', 'Sobre o coronavirus, o que é? de onde veio? como é? de onde é? quando é?', 'Saulo Aulo', 'savioacpacp@gmail.com')
+
+insert tblFuncionario values	('Sávio Alves', '47939319876', 'Rua Castanhal, 165 Casa 2 - C. Patriarca, São Paulo, SP', '11968518997', 'Administador', 'savioacp@gmail.com', 0, ''),
+								('Juliana Fusco', '1234567890X', 'Rua Grande Grande pra Grande, 123 - Lá, Pá, São Paulo, SP', '11987654321', 'Administador', 'julic.fusco@gmail.com', 0, '')
 
 select * from tblEvento where Titulo like '%Coro%'

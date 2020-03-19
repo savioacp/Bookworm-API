@@ -88,29 +88,6 @@ namespace Bookworm_API.Models
 
             return eventos.ToArray();
         }
-
-        public static Evento GetEvento(int id)
-        {
-
-            SqlCommand command = new SqlCommand()
-            {
-                CommandText = "select * from tblEvento where IdEvento=@Id"
-            };
-
-            command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
-
-            DataTable dt = Data.DbManager.CurrentInstance.Execute(command);
-
-            return new Evento()
-            {
-                Id = (int)dt.Rows[0]["IDEvento"],
-                Titulo = dt.Rows[0]["Titulo"].ToString(),
-                Descrição = dt.Rows[0]["Descricao"].ToString(),
-                Responsável = dt.Rows[0]["Responsavel"].ToString(),
-                Email = dt.Rows[0]["Email"].ToString()
-            };
-        }
-
         public static Evento[] GetEventos(string query)
         {
 
@@ -140,6 +117,27 @@ namespace Bookworm_API.Models
             return eventos.ToArray();
         }
 
+        public static Evento GetEvento(int id)
+        {
+
+            SqlCommand command = new SqlCommand()
+            {
+                CommandText = "select * from tblEvento where IdEvento=@Id"
+            };
+
+            command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+
+            DataTable dt = Data.DbManager.CurrentInstance.Execute(command);
+
+            return new Evento()
+            {
+                Id = (int)dt.Rows[0]["IDEvento"],
+                Titulo = dt.Rows[0]["Titulo"].ToString(),
+                Descrição = dt.Rows[0]["Descricao"].ToString(),
+                Responsável = dt.Rows[0]["Responsavel"].ToString(),
+                Email = dt.Rows[0]["Email"].ToString()
+            };
+        }
 
     }
 }
