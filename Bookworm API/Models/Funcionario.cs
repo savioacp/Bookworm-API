@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using Bookworm_API.Services;
 using Newtonsoft.Json;
 
 namespace Bookworm_API.Models
@@ -18,6 +19,24 @@ namespace Bookworm_API.Models
         public string Cargo { get; set; }
         public string Email { get; set; }
 
+        public Funcionario Add()
+        {
+            SqlCommand command = new SqlCommand()
+            {
+                CommandText = "insert tblFuncionario output INSERTED.IDFuncionario values (@Nome, @CPF, @Endereco, @Telefone, @Cargo, @Email, 0, '')" //TODO: Authentication and Authorization
+            };
+
+            command.Parameters.Add("@Nome", SqlDbType.VarChar).Value = Nome;
+            command.Parameters.Add("@CPF", SqlDbType.VarChar).Value = CPF;
+            command.Parameters.Add("@Endereco", SqlDbType.VarChar).Value = Endereço;
+            command.Parameters.Add("@Telefone", SqlDbType.VarChar).Value = Telefone;
+            command.Parameters.Add("@Cargo", SqlDbType.VarChar).Value = Cargo;
+            command.Parameters.Add("@Email", SqlDbType.VarChar).Value = Email;
+
+            Id = (int)DbManager.CurrentInstance.ExecuteScalar(command);
+
+            return this;
+        }
 
         public static Funcionario[] GetFuncionarios()
         {
@@ -29,7 +48,7 @@ namespace Bookworm_API.Models
 
             List<Funcionario> funcionarios = new List<Funcionario>();
 
-            DataTable dt = Data.DbManager.CurrentInstance.Execute(command);
+            DataTable dt = DbManager.CurrentInstance.Execute(command);
 
             foreach (DataRow row in dt.Rows)
             {
@@ -47,5 +66,6 @@ namespace Bookworm_API.Models
 
             return funcionarios.ToArray();
         }
+
     }
 }

@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using Bookworm_API.Services;
 
 namespace Bookworm_API.Models
 {
@@ -27,7 +28,7 @@ namespace Bookworm_API.Models
             command.Parameters.Add("@Responsavel", SqlDbType.VarChar).Value = Responsável;
             command.Parameters.Add("@Email", SqlDbType.VarChar).Value = Email;
 
-            Id = (int) Data.DbManager.CurrentInstance.ExecuteScalar(command);
+            Id = (int) DbManager.CurrentInstance.ExecuteScalar(command);
 
             return this;
         }
@@ -45,7 +46,7 @@ namespace Bookworm_API.Models
             command.Parameters.Add("@Responsavel", SqlDbType.VarChar).Value = Responsável;
             command.Parameters.Add("@Email", SqlDbType.VarChar).Value = Email;
 
-            Data.DbManager.CurrentInstance.ExecuteNonQuery(command);
+            DbManager.CurrentInstance.ExecuteNonQuery(command);
 
             return this;
         }
@@ -59,7 +60,7 @@ namespace Bookworm_API.Models
 
             command.Parameters.Add("@IdEvento", SqlDbType.Int).Value = Id;
 
-            Data.DbManager.CurrentInstance.ExecuteNonQuery(command);
+            DbManager.CurrentInstance.ExecuteNonQuery(command);
         }
 
         public static Evento[] GetEventos()
@@ -72,7 +73,7 @@ namespace Bookworm_API.Models
 
             List<Evento> eventos = new List<Evento>();
 
-            DataTable dt = Data.DbManager.CurrentInstance.Execute(command);
+            DataTable dt = DbManager.CurrentInstance.Execute(command);
 
             foreach (DataRow row in dt.Rows)
             {
@@ -100,7 +101,7 @@ namespace Bookworm_API.Models
 
             List<Evento> eventos = new List<Evento>();
 
-            DataTable dt = Data.DbManager.CurrentInstance.Execute(command);
+            DataTable dt = DbManager.CurrentInstance.Execute(command);
 
             foreach (DataRow row in dt.Rows)
             {
@@ -127,7 +128,7 @@ namespace Bookworm_API.Models
 
             command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
 
-            DataTable dt = Data.DbManager.CurrentInstance.Execute(command);
+            DataTable dt = DbManager.CurrentInstance.Execute(command);
 
             return new Evento()
             {

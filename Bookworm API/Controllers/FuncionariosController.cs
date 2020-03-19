@@ -16,5 +16,10 @@ namespace Bookworm_API.Controllers
         {
             return Json(Funcionario.GetFuncionarios());
         }
+
+        public JsonResult<Funcionario> Post(Funcionario func)
+        {
+            return Json(func.Add());
+        }
     }
 }
