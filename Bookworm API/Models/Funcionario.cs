@@ -38,6 +38,26 @@ namespace Bookworm_API.Models
             return this;
         }
 
+        public Funcionario Commit()
+        {
+            SqlCommand command = new SqlCommand()
+            {
+                CommandText = "update tblFuncionario set Nome=@Nome, CPF=@CPF, Endereco=@Endereco, Telefone=@Telefone, Cargo=@Cargo, Email=@Email where IDFuncionario=@IDFuncionario"
+            };
+
+            command.Parameters.Add("@IDFuncionario", SqlDbType.VarChar).Value = Id;
+            command.Parameters.Add("@Nome", SqlDbType.VarChar).Value = Nome;
+            command.Parameters.Add("@CPF", SqlDbType.VarChar).Value = CPF;
+            command.Parameters.Add("@Endereco", SqlDbType.VarChar).Value = Endereço;
+            command.Parameters.Add("@Telefone", SqlDbType.VarChar).Value = Telefone;
+            command.Parameters.Add("@Cargo", SqlDbType.VarChar).Value = Cargo;
+            command.Parameters.Add("@Email", SqlDbType.VarChar).Value = Email;
+
+            DbManager.CurrentInstance.ExecuteNonQuery(command);
+
+            return this;
+        }
+
         public static Funcionario[] GetFuncionarios()
         {
 
@@ -65,6 +85,30 @@ namespace Bookworm_API.Models
             }
 
             return funcionarios.ToArray();
+        }
+        public static Funcionario GetFuncionario(int id)
+        {
+
+            SqlCommand command = new SqlCommand()
+            {
+                CommandText = "select * from tblFuncionario where IDFuncionario=@Id"
+            };
+
+            command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+
+            var row = DbManager.CurrentInstance.Execute(command).Rows[0];
+
+
+            return new Funcionario()
+            {
+                Id = (int) row["IDFuncionario"],
+                Nome = row["Nome"] as string,
+                CPF = row["CPF"] as string,
+                Endereço = row["Endereco"] as string,
+                Telefone = row["Telefone"] as string,
+                Cargo = row["Cargo"] as string,
+                Email = row["Email"] as string
+            };
         }
 
     }
