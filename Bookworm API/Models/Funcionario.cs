@@ -4,7 +4,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.UI;
 using Bookworm_API.Services;
+using Dapper;
 using Newtonsoft.Json;
 
 namespace Bookworm_API.Models
@@ -21,94 +23,48 @@ namespace Bookworm_API.Models
 
         public Funcionario Add()
         {
-            SqlCommand command = new SqlCommand()
+            var _params = new
             {
-                CommandText = "insert tblFuncionario output INSERTED.IDFuncionario values (@Nome, @CPF, @Endereco, @Telefone, @Cargo, @Email, 0, '')" //TODO: Authentication and Authorization
+                Nome,
+                CPF,
+                Endereço,
+                Telefone,
+                Cargo,
+                Email
             };
-
-            command.Parameters.Add("@Nome", SqlDbType.VarChar).Value = Nome;
-            command.Parameters.Add("@CPF", SqlDbType.VarChar).Value = CPF;
-            command.Parameters.Add("@Endereco", SqlDbType.VarChar).Value = Endereço;
-            command.Parameters.Add("@Telefone", SqlDbType.VarChar).Value = Telefone;
-            command.Parameters.Add("@Cargo", SqlDbType.VarChar).Value = Cargo;
-            command.Parameters.Add("@Email", SqlDbType.VarChar).Value = Email;
-
-            Id = (int)DbManager.CurrentInstance.ExecuteScalar(command);
-
+            
+            //TODO: Authentication and Authorization
+            
+            Id = DbManager.Connection.QueryFirst<int>("insert tblFuncionario output INSERTED.IDFuncionario values (@Nome, @CPF, @Endereço, @Telefone, @Cargo, @Email, 0, '')", _params); 
             return this;
         }
 
         public Funcionario Commit()
         {
-            SqlCommand command = new SqlCommand()
+            var _params = new
             {
-                CommandText = "update tblFuncionario set Nome=@Nome, CPF=@CPF, Endereco=@Endereco, Telefone=@Telefone, Cargo=@Cargo, Email=@Email where IDFuncionario=@IDFuncionario"
+                IDFuncionario = Id,
+                Nome,
+                CPF,
+                Endereço,
+                Telefone,
+                Cargo,
+                Email
             };
-
-            command.Parameters.Add("@IDFuncionario", SqlDbType.VarChar).Value = Id;
-            command.Parameters.Add("@Nome", SqlDbType.VarChar).Value = Nome;
-            command.Parameters.Add("@CPF", SqlDbType.VarChar).Value = CPF;
-            command.Parameters.Add("@Endereco", SqlDbType.VarChar).Value = Endereço;
-            command.Parameters.Add("@Telefone", SqlDbType.VarChar).Value = Telefone;
-            command.Parameters.Add("@Cargo", SqlDbType.VarChar).Value = Cargo;
-            command.Parameters.Add("@Email", SqlDbType.VarChar).Value = Email;
-
-            DbManager.CurrentInstance.ExecuteNonQuery(command);
+            DbManager.Connection.Execute(
+                "update tblFuncionario set Nome=@Nome, CPF=@CPF, Endereco=@Endereço, Telefone=@Telefone, Cargo=@Cargo, Email=@Email where IDFuncionario=@IDFuncionario", _params);
 
             return this;
         }
 
         public static Funcionario[] GetFuncionarios()
         {
-
-            SqlCommand command = new SqlCommand()
-            {
-                CommandText = "select * from tblFuncionario"
-            };
-
-            List<Funcionario> funcionarios = new List<Funcionario>();
-
-            DataTable dt = DbManager.CurrentInstance.Execute(command);
-
-            foreach (DataRow row in dt.Rows)
-            {
-                funcionarios.Add(new Funcionario()
-                {
-                    Id = (int)row["IDFuncionario"],
-                    Nome = row["Nome"] as string,
-                    CPF = row["CPF"] as string,
-                    Endereço = row["Endereco"] as string,
-                    Telefone = row["Telefone"] as string,
-                    Cargo = row["Cargo"] as string,
-                    Email = row["Email"] as string
-                });
-            }
-
-            return funcionarios.ToArray();
+            return DbManager.Connection.Query<Funcionario>("select * from tblFuncionario").ToArray();
         }
         public static Funcionario GetFuncionario(int id)
         {
-
-            SqlCommand command = new SqlCommand()
-            {
-                CommandText = "select * from tblFuncionario where IDFuncionario=@Id"
-            };
-
-            command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
-
-            var row = DbManager.CurrentInstance.Execute(command).Rows[0];
-
-
-            return new Funcionario()
-            {
-                Id = (int) row["IDFuncionario"],
-                Nome = row["Nome"] as string,
-                CPF = row["CPF"] as string,
-                Endereço = row["Endereco"] as string,
-                Telefone = row["Telefone"] as string,
-                Cargo = row["Cargo"] as string,
-                Email = row["Email"] as string
-            };
+            return DbManager.Connection.QueryFirst<Funcionario>(
+                "select * from tblFuncionario where IDFuncionario=@Id", new { Id = id });
         }
 
     }

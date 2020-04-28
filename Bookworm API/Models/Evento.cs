@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web;
 using Bookworm_API.Services;
+using Dapper;
 
 namespace Bookworm_API.Models
 {
@@ -18,126 +20,53 @@ namespace Bookworm_API.Models
 
         public Evento Add()
         {
-            SqlCommand command = new SqlCommand()
+            var _params = new
             {
-                CommandText = "insert tblEvento output INSERTED.IDEvento values (@Titulo, @Descricao, @Responsavel, @Email)"
+                Titulo,
+                Descrição,
+                Responsável,
+                Email
             };
 
-            command.Parameters.Add("@Titulo", SqlDbType.VarChar).Value = Titulo;
-            command.Parameters.Add("@Descricao", SqlDbType.VarChar).Value = Descrição;
-            command.Parameters.Add("@Responsavel", SqlDbType.VarChar).Value = Responsável;
-            command.Parameters.Add("@Email", SqlDbType.VarChar).Value = Email;
-
-            Id = (int) DbManager.CurrentInstance.ExecuteScalar(command);
+            Id = DbManager.Connection.ExecuteScalar<int>("insert tblEvento output INSERTED.IDEvento values (@Titulo, @Descrição, @Responsável, @Email)", _params);
 
             return this;
         }
 
         public Evento Commit()
         {
-            SqlCommand command = new SqlCommand()
+            var _params = new
             {
-                CommandText = "update tblEvento set Titulo=@Titulo, Descricao=@Descricao, Responsavel=@Responsavel, Email=@Email where IdEvento=@IdEvento"
+                IdEvento = Id,
+                Titulo,
+                Descrição,
+                Responsável,
+                Email
             };
 
-            command.Parameters.Add("@IdEvento", SqlDbType.Int).Value = Id;
-            command.Parameters.Add("@Titulo", SqlDbType.VarChar).Value = Titulo;
-            command.Parameters.Add("@Descricao", SqlDbType.VarChar).Value = Descrição;
-            command.Parameters.Add("@Responsavel", SqlDbType.VarChar).Value = Responsável;
-            command.Parameters.Add("@Email", SqlDbType.VarChar).Value = Email;
 
-            DbManager.CurrentInstance.ExecuteNonQuery(command);
+            DbManager.Connection.Execute("update tblEvento set Titulo=@Titulo, Descricao=@Descrição, Responsavel=@Responsável, Email=@Email where IdEvento=@IdEvento", _params);
 
             return this;
         }
 
         public void Delete()
         {
-            SqlCommand command = new SqlCommand()
-            {
-                CommandText = "delete from tblEvento where IdEvento=@IdEvento"
-            };
-
-            command.Parameters.Add("@IdEvento", SqlDbType.Int).Value = Id;
-
-            DbManager.CurrentInstance.ExecuteNonQuery(command);
+            DbManager.Connection.Execute("delete from tblEvento where IdEvento=@IdEvento", new { IdEvento = Id });
         }
 
         public static Evento[] GetEventos()
         {
-
-            SqlCommand command = new SqlCommand()
-            {
-                CommandText = "select * from tblEvento"
-            };
-
-            List<Evento> eventos = new List<Evento>();
-
-            DataTable dt = DbManager.CurrentInstance.Execute(command);
-
-            foreach (DataRow row in dt.Rows)
-            {
-                eventos.Add(new Evento()
-                {
-                    Id = (int)row["IDEvento"],
-                    Titulo = row["Titulo"].ToString(),
-                    Descrição = row["Descricao"].ToString(),
-                    Responsável = row["Responsavel"].ToString(),
-                    Email = row["Email"].ToString()
-                });
-            }
-
-            return eventos.ToArray();
+            return DbManager.Connection.Query<Evento>("select * from tblEvento").ToArray();
         }
         public static Evento[] GetEventos(string query)
         {
-
-            SqlCommand command = new SqlCommand()
-            {
-                CommandText = "select * from tblEvento where Titulo like @Query"
-            };
-
-            command.Parameters.Add("@Query", SqlDbType.VarChar).Value = $"%{query}%";
-
-            List<Evento> eventos = new List<Evento>();
-
-            DataTable dt = DbManager.CurrentInstance.Execute(command);
-
-            foreach (DataRow row in dt.Rows)
-            {
-                eventos.Add(new Evento()
-                {
-                    Id = (int)row["IDEvento"],
-                    Titulo = row["Titulo"].ToString(),
-                    Descrição = row["Descricao"].ToString(),
-                    Responsável = row["Responsavel"].ToString(),
-                    Email = row["Email"].ToString()
-                });
-            }
-
-            return eventos.ToArray();
+            return DbManager.Connection.Query<Evento>("select * from tblEvento where Titulo like @Query", new { Query = query }).ToArray();
         }
 
         public static Evento GetEvento(int id)
         {
-
-            SqlCommand command = new SqlCommand()
-            {
-                CommandText = "select * from tblEvento where IdEvento=@Id"
-            };
-
-            command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
-
-            DataTable dt = DbManager.CurrentInstance.Execute(command);
-
-            return new Evento()
-            {
-                Id = (int)dt.Rows[0]["IDEvento"],
-                Titulo = dt.Rows[0]["Titulo"].ToString(),
-                Descrição = dt.Rows[0]["Descricao"].ToString(),
-                Responsável = dt.Rows[0]["Responsavel"].ToString(),
-                Email = dt.Rows[0]["Email"].ToString()
-            };
+            return DbManager.Connection.QueryFirst<Evento>("select * from tblEvento where IdEvento=@Id", new { Id=id });
         }
 
     }

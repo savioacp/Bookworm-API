@@ -7,7 +7,10 @@ namespace Bookworm_API.Services
     public class DbManager
     {
 
-        private static SqlConnection _connection;
+        private SqlConnection _connection;
+
+        public static SqlConnection Connection => CurrentInstance._connection;
+
         private static readonly string ConnectionString = $"Data Source={Environment.MachineName};" +
                                                           $"Integrated Security=true;" +
                                                           $"Initial Catalog=TCCF";

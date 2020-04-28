@@ -30,7 +30,7 @@ namespace Bookworm_API.Controllers
             {
                 return Json(Funcionario.GetFuncionario(id) as object);
             }
-            catch (IndexOutOfRangeException)
+            catch (Exception)
             {
                 return Json(new
                 {
@@ -54,7 +54,7 @@ namespace Bookworm_API.Controllers
 
                 return Json(_f.Commit() as object);
             }
-            catch (IndexOutOfRangeException)
+            catch (Exception)
             {
                 return Json(new
                 {

@@ -75,4 +75,4 @@ insert tblEvento values ('Palestra 1', 'Palestra de testes para testar', 'Sávio 
 insert tblFuncionario values	('Sávio Alves', '47939319876', 'Rua Castanhal, 165 Casa 2 - C. Patriarca, São Paulo, SP', '11968518997', 'Administador', 'savioacp@gmail.com', 0, ''),
 								('Juliana Fusco', '1234567890X', 'Rua Grande Grande pra Grande, 123 - Lá, Pá, São Paulo, SP', '11987654321', 'Administador', 'julic.fusco@gmail.com', 0, '')
 
-select * from tblEvento where Titulo like '%Coro%'
+select * from tblEvento where Titulo like '%espi%'
