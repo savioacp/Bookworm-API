@@ -21,7 +21,18 @@ namespace Bookworm_API.Models
         {
             internal EventoMap()
             {
-                
+                Map(e => e.Descrição).ToColumn("Descricao");
+                Map(e => e.Responsável).ToColumn("Responsável");
+            }
+        }
+
+        public class LeitorMap : EntityMap<Leitor>
+        {
+            internal LeitorMap()
+            {
+                Map(l => l.Id).ToColumn("IDLeitor");
+                Map(l => l.DataNascimento).ToColumn("DataNasc");
+                Map(l => l.Endereço).ToColumn("Endereco");
             }
         }
     }

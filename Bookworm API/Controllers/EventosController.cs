@@ -36,7 +36,7 @@ namespace Bookworm_API.Controllers
             {
                 return Json(new
                 {
-                    Error = 404,
+                    Code = 404,
                     Message = "Evento não encontrado"
                 } as object);
             }

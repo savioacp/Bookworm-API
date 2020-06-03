@@ -57,6 +57,11 @@ namespace Bookworm_API.Models
             return this;
         }
 
+        public void Delete()
+        {
+            DbManager.Connection.Execute("delete from tblFuncionario where IDFuncionario=@IDFuncionario", new { IDFuncionario = Id });
+        }
+
         public static Funcionario[] GetFuncionarios()
         {
             return DbManager.Connection.Query<Funcionario>("select * from tblFuncionario").ToArray();
