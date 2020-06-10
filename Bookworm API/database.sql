@@ -74,3 +74,6 @@ create table tblReserva(
 	IDLeitor int foreign key references tblLeitor,
 	DataReserva date not null, 
 )
+
+
+select * from tblLeitor

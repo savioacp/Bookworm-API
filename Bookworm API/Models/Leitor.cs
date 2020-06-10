@@ -12,12 +12,12 @@ namespace Bookworm_API.Models
         public int Id { get; set; }
         public string Nome { get; set; }
         public string RG { get; set; }
-        public DateTime DataNascimento { get; set; }
+        public DateTime? DataNascimento { get; set; }
         public string Endereço { get; set; }
         public string Telefone { get; set; }
         public int? TipoLeitor { get; set; }
         public string Email { get; set; }
-        public DateTime? DataCadastro { get; set; }
+        public DateTime DataCadastro { get; set; }
 
         public Leitor Add()
         {
@@ -30,7 +30,7 @@ namespace Bookworm_API.Models
                 Telefone,
                 TipoLeitor,
                 Email,
-                DataCadastro = DateTime.Now,
+                DataCadastro = DateTime.UtcNow,
                 Imagem = (byte)0x00
             };
             
@@ -44,7 +44,7 @@ namespace Bookworm_API.Models
         {
             var _params = new
             {
-                IdEvento = Id,
+                IdLeitor = Id,
                 Nome,
                 RG,
                 Endereço,
@@ -53,14 +53,14 @@ namespace Bookworm_API.Models
                 Email
             };
             DbManager.Connection.Execute(
-                "update tblEvento set Nome=@Nome, RG=@RG, Endereco=@Endereço, Telefone=@Telefone, TipoLeitor=@TipoLeitor, Email=@Email where IdEvento=@IdEvento", _params);
+                "update tblLeitor set Nome=@Nome, RG=@RG, Endereco=@Endereço, Telefone=@Telefone, TipoLeitor=@TipoLeitor, Email=@Email where IdLeitor=@IdLeitor", _params);
 
             return this;
         }
 
         public void Delete()
         {
-            DbManager.Connection.Execute("delete from tblEvento where IdEvento=@IdEvento", new { IdEvento = Id });
+            DbManager.Connection.Execute("delete from tblLeitor where IdLeitor=@IdLeitor", new { IdLeitor = Id });
         }
 
         public static Leitor[] GetLeitores()
@@ -72,6 +72,11 @@ namespace Bookworm_API.Models
         public static Leitor GetLeitor(int id)
         {
             return DbManager.Connection.QueryFirst<Leitor>("select * from tblLeitor where idLeitor=@Id", new { Id = id });
+        }
+
+        public static Leitor GetLeitor(string email)
+        {
+            return DbManager.Connection.QueryFirst<Leitor>("select * from tblLeitor where Email=@Email", new { Email = email });
         }
 
 

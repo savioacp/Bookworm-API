@@ -12,9 +12,9 @@ namespace Bookworm_API.Controllers
 {
     public class RegisterController : ApiController
     {
-        public JsonResult<object> Post(Leitor leitor, [FromUri]string password)
+        public JsonResult<object> Post(Login value)
         {
-            if (Authentication.RegisterUser(leitor, password))
+            if (Authentication.RegisterUser(Leitor.GetLeitor(value.Email), value.Senha))
                 return Json(new
                 {
                     Code = 200,
