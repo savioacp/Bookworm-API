@@ -51,7 +51,7 @@ create table tblLeitor(
 	DataNasc date,
 	Endereco varchar(150),
 	Telefone varchar(11),
-	TipoLeitor int not null,
+	TipoLeitor varchar(50) not null,
 	Email varchar(50) not null,
 	DataCadastro date not null,
 	Senha varchar(32) not null,
@@ -75,5 +75,4 @@ create table tblReserva(
 	DataReserva date not null, 
 )
 
-
-select * from tblLeitor
+select i as testee from (select 'snad' as i) as _

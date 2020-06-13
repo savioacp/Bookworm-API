@@ -15,7 +15,7 @@ namespace Bookworm_API.Models
         public DateTime? DataNascimento { get; set; }
         public string Endereço { get; set; }
         public string Telefone { get; set; }
-        public int? TipoLeitor { get; set; }
+        public string TipoLeitor { get; set; }
         public string Email { get; set; }
         public DateTime DataCadastro { get; set; }
 
