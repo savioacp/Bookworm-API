@@ -15,6 +15,7 @@ namespace Bookworm_API.Models
     {
         public int Id { get; set; }
         public string Nome { get; set; }
+        public string RG { get; set; }
         public string CPF { get; set; }
         public string Endereço { get; set; }
         public string Telefone { get; set; }
@@ -35,7 +36,7 @@ namespace Bookworm_API.Models
             
             //TODO: Authentication and Authorization
             
-            Id = DbManager.Connection.QueryFirst<int>("insert tblFuncionario output INSERTED.IDFuncionario values (@Nome, @CPF, @Endereço, @Telefone, @Cargo, @Email, 0, '')", _params); 
+            Id = DbManager.Connection.QueryFirst<int>("insert tblFuncionario output INSERTED.IDFuncionario values (@Nome, @CPF, @RG, @Endereço, @Telefone, @Cargo, @Email, 0, '')", _params); 
             return this;
         }
 
@@ -52,7 +53,7 @@ namespace Bookworm_API.Models
                 Email
             };
             DbManager.Connection.Execute(
-                "update tblFuncionario set Nome=@Nome, CPF=@CPF, Endereco=@Endereço, Telefone=@Telefone, Cargo=@Cargo, Email=@Email where IDFuncionario=@IDFuncionario", _params);
+                "update tblFuncionario set Nome=@Nome, CPF=@CPF, RG=@RG, Endereco=@Endereço, Telefone=@Telefone, Cargo=@Cargo, Email=@Email where IDFuncionario=@IDFuncionario", _params);
 
             return this;
         }

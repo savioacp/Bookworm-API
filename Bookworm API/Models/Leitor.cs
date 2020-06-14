@@ -12,6 +12,7 @@ namespace Bookworm_API.Models
         public int Id { get; set; }
         public string Nome { get; set; }
         public string RG { get; set; }
+        public string CPF { get; set; }
         public DateTime? DataNascimento { get; set; }
         public string Endereço { get; set; }
         public string Telefone { get; set; }
@@ -25,6 +26,7 @@ namespace Bookworm_API.Models
             {
                 Nome,
                 RG,
+                CPF,
                 DataNascimento,
                 Endereço,
                 Telefone,
@@ -36,7 +38,7 @@ namespace Bookworm_API.Models
             
             //TODO: Authentication and Authorization
 
-            Id = DbManager.Connection.QueryFirst<int>("insert tblLeitor output INSERTED.idLeitor values (@Nome, @RG, @DataNascimento, @Endereço, @Telefone, @TipoLeitor, @Email, @DataCadastro, '', '', @Imagem)", _params);
+            Id = DbManager.Connection.QueryFirst<int>("insert tblLeitor output INSERTED.idLeitor values (@Nome, @CPF, @RG, @DataNascimento, @Endereço, @Telefone, @TipoLeitor, @Email, @DataCadastro, '', '', @Imagem)", _params);
             return this;
         }
 
@@ -47,13 +49,14 @@ namespace Bookworm_API.Models
                 IdLeitor = Id,
                 Nome,
                 RG,
+                CPF,
                 Endereço,
                 Telefone,
                 TipoLeitor,
                 Email
             };
             DbManager.Connection.Execute(
-                "update tblLeitor set Nome=@Nome, RG=@RG, Endereco=@Endereço, Telefone=@Telefone, TipoLeitor=@TipoLeitor, Email=@Email where IdLeitor=@IdLeitor", _params);
+                "update tblLeitor set Nome=@Nome, RG=@RG, CPF=@CPF, Endereco=@Endereço, Telefone=@Telefone, TipoLeitor=@TipoLeitor, Email=@Email where IdLeitor=@IdLeitor", _params);
 
             return this;
         }

@@ -44,6 +44,7 @@ namespace Bookworm_API.Controllers
             {
                 Leitor _leitor = Leitor.GetLeitor(id);
                 _leitor.Nome = leitor.Nome ?? _leitor.Nome;
+                _leitor.CPF = leitor.CPF ?? _leitor.CPF;
                 _leitor.RG = leitor.RG ?? _leitor.RG;
                 _leitor.DataNascimento = leitor.DataNascimento ?? _leitor.DataNascimento;
                 _leitor.TipoLeitor = leitor.TipoLeitor ?? _leitor.TipoLeitor;

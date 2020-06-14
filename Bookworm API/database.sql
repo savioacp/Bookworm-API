@@ -26,6 +26,7 @@ create table tblFuncionario(
 	IDFuncionario int identity primary key,
 	Nome varchar(50) not null,
 	CPF char(11) not null, 
+	RG char(9) not null, 
 	Endereco varchar (150) not null,
 	Telefone varchar(11) not null,
 	Cargo varchar(50),
@@ -47,6 +48,7 @@ create table tblEvento(
 create table tblLeitor(
 	IDLeitor int identity primary key,
 	Nome varchar(50) not null,
+	CPF char(11) not null, 
 	RG char(9) not null, 
 	DataNasc date,
 	Endereco varchar(150),
@@ -75,4 +77,4 @@ create table tblReserva(
 	DataReserva date not null, 
 )
 
-select i as testee from (select 'snad' as i) as _
+select 'Bookworm API' as 'Projeto', 'https://git.io/JfQkS' as 'Repositório'

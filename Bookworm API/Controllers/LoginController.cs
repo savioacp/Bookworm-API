@@ -3,7 +3,6 @@ using Bookworm_API.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
@@ -14,10 +13,12 @@ namespace Bookworm_API.Controllers
     {
         public JsonResult<object> Post([FromBody]Login value)
         {
-            if (Authentication.LogUserIn(Leitor.GetLeitor(value.Email), value.Senha))
+            var currentLeitor = Leitor.GetLeitor(value.Email);
+            if (Authentication.LogUserIn(currentLeitor, value.Senha))
                 return Json(new
                 {
-                    Code = 200
+                    Code = 200,
+                    Token = Authorization.GenerateJWT(currentLeitor)
                 } as object);
             return Json(new 
             { 
