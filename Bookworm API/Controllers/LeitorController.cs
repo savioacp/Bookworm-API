@@ -11,65 +11,98 @@ namespace Bookworm_API.Controllers
 {
     public class LeitorController : ApiController
     {
-        public JsonResult<Leitor[]> Get()
+        public IHttpActionResult Get(int page = 1, int results = 20)
         {
-            return Json(Leitor.GetLeitores());
-        }
-
-        public JsonResult<Leitor> Post(Leitor leitor)
-        {
-            return Json(leitor.Add());
-        }
-
-
-        public JsonResult<object> Get(int id)
-        {
-            try
+            using (var db = new TccSettings())
             {
-                return Json(Leitor.GetLeitor(id) as object);
-            }
-            catch (Exception)
-            {
+                var leitoresCount = db.tblLeitor.Count();
+                if ((page - 1) * results > leitoresCount)
+                    return Json(new
+                    {
+                        total_count = leitoresCount,
+                        count = 0,
+                        leitores = new object[] { }
+                    });
+
+                var leitores = db.tblLeitor.Skip(page * results).Take(results).ToArray();
+
                 return Json(new
                 {
-                    Code = 404,
-                    Message = "Leitor não encontrado"
-                } as object);
+                    total_count = leitoresCount,
+                    count = leitores.Count(),
+                    leitores
+                });
             }
         }
 
-        public JsonResult<object> Put(int id, Leitor leitor)
-        {
-            try
-            {
-                Leitor _leitor = Leitor.GetLeitor(id);
-                _leitor.Nome = leitor.Nome ?? _leitor.Nome;
-                _leitor.CPF = leitor.CPF ?? _leitor.CPF;
-                _leitor.RG = leitor.RG ?? _leitor.RG;
-                _leitor.DataNascimento = leitor.DataNascimento ?? _leitor.DataNascimento;
-                _leitor.TipoLeitor = leitor.TipoLeitor ?? _leitor.TipoLeitor;
-                _leitor.Email = leitor.Email ?? _leitor.Email;
-                _leitor.Telefone = leitor.Telefone ?? _leitor.Telefone;
-                _leitor.Endereço = leitor.Endereço ?? _leitor.Endereço;
 
-                return Json(_leitor.Commit() as object);
-            }
-            catch (Exception e)
+        public IHttpActionResult Post(dynamic leitor)
+        {
+            using (var db = new TccSettings())
             {
-                return Json(new
+                var addedLeitor = db.tblLeitor.Add(leitor);
+                db.SaveChanges();
+                return Json(leitor);
+            }
+        }
+
+
+        public IHttpActionResult Get(int id)
+        {
+
+            using (var db = new TccSettings())
+            {
+                var leitor = db.tblLeitor.Select(l => new
                 {
-                    Code = 404,
-                    Message = e.Message
-                } as object);
+                    l.IDLeitor,
+                    TipoLeitor = l.tblTipoLeitor,
+                    l.Nome,
+                    l.RG,
+                    l.CPF,
+                    l.DataCadastro,
+                    l.DataNasc,
+                    l.Email,
+                    l.Endereco,
+                    ImagemLeitor = Convert.ToBase64String(l.ImagemLeitor),
+                }).First(l => l.IDLeitor == id);
+                return Json(leitor);
             }
         }
 
-        public JsonResult<object> Delete(int id)
+        public IHttpActionResult Put(int id, tblLeitor leitor)
         {
-            Leitor.GetLeitor(id).Delete();
-            return Json(new {
-                Code = 200
-            } as object);
+            using (var db = new TccSettings())
+                try
+                {
+                    tblLeitor _leitor = db.tblLeitor.First(l => l.IDLeitor == id);
+                    _leitor.Nome = leitor.Nome ?? _leitor.Nome;
+                    _leitor.CPF = leitor.CPF ?? _leitor.CPF;
+                    _leitor.RG = leitor.RG ?? _leitor.RG;
+                    _leitor.DataNasc = leitor.DataNasc ?? _leitor.DataNasc;
+                    _leitor.IDTipoLeitor = leitor.IDTipoLeitor ?? _leitor.IDTipoLeitor;
+                    _leitor.Email = leitor.Email ?? _leitor.Email;
+                    _leitor.Telefone = leitor.Telefone ?? _leitor.Telefone;
+                    _leitor.Endereco = leitor.Endereco ?? _leitor.Endereco;
+                    db.SaveChanges();
+                    return Json(_leitor);
+                }
+                catch (Exception e)
+                {
+                    return Json(new
+                    {
+                        Code = 404,
+                        e.Message
+                    });
+                }
+        }
+
+        public IHttpActionResult Delete(int id)
+        {
+            using (var db = new TccSettings())
+            {
+                db.tblLeitor.Remove(db.tblLeitor.First(l => l.IDLeitor == id));
+                return StatusCode(HttpStatusCode.OK);
+            }
         }
     }
 }

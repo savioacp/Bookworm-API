@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b7cd6c0c50954cfaa874195fcd198f94" Name="Diagram1">
+        <EntityTypeShape EntityType="TCCFModel.tblCargo" Width="1.5" PointX="1.5" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCCFModel.tblEmprestimo" Width="1.5" PointX="3" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCCFModel.tblEvento" Width="1.5" PointX="8.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCCFModel.tblFavoritos" Width="1.5" PointX="6" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCCFModel.tblFuncionario" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCCFModel.tblGenero" Width="1.5" PointX="3.75" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCCFModel.tblGeneroProduto" Width="1.5" PointX="6" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCCFModel.tblLeitor" Width="1.5" PointX="0.75" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCCFModel.tblProduto" Width="1.5" PointX="0.75" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCCFModel.tblReserva" Width="1.5" PointX="6" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCCFModel.tblTipoLeitor" Width="1.5" PointX="1.5" PointY="19.375" IsExpanded="true" />
+        <AssociationConnector Association="TCCFModel.FK__tblFuncio__IDCar__2D27B809" ManuallyRouted="false" />
+        <AssociationConnector Association="TCCFModel.FK__tblEmpres__IDFun__3A81B327" ManuallyRouted="false" />
+        <AssociationConnector Association="TCCFModel.FK__tblEmpres__IDLei__3C69FB99" ManuallyRouted="false" />
+        <AssociationConnector Association="TCCFModel.FK__tblEmpres__IDPro__3B75D760" ManuallyRouted="false" />
+        <AssociationConnector Association="TCCFModel.FK__tblFavori__IDLei__36B12243" ManuallyRouted="false" />
+        <AssociationConnector Association="TCCFModel.FK__tblFavori__IDPro__37A5467C" ManuallyRouted="false" />
+        <AssociationConnector Association="TCCFModel.FK__tblGenero__IDGen__276EDEB3" ManuallyRouted="false" />
+        <AssociationConnector Association="TCCFModel.FK__tblGenero__IDPro__286302EC" ManuallyRouted="false" />
+        <AssociationConnector Association="TCCFModel.FK__tblLeitor__IDTip__33D4B598" ManuallyRouted="false" />
+        <AssociationConnector Association="TCCFModel.FK__tblReserv__IDLei__403A8C7D" ManuallyRouted="false" />
+        <AssociationConnector Association="TCCFModel.FK__tblReserv__IDPro__3F466844" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

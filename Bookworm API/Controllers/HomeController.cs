@@ -11,7 +11,7 @@ namespace Bookworm_API.Controllers
     {
         public ActionResult Index()
         {
-            return Content("<a href=\"/eventos\">/eventos</a>");
+            return Content("");
         }
     }
 }

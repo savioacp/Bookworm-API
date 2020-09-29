@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -45,11 +46,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.2.0.35\lib\net461\Dapper.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper.FluentMap, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.FluentMap.1.8.0\lib\net451\Dapper.FluentMap.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=6.5.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -154,7 +155,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\EventosController.cs" />
-    <Compile Include="Controllers\FuncionariosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LeitorController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -162,23 +162,74 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\EntityMaps.cs" />
-    <Compile Include="Models\Image.cs" />
     <Compile Include="Models\Login.cs" />
+    <Compile Include="Models\PagedResult.cs" />
+    <Compile Include="Models\tblCargo.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblEmprestimo.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblEvento.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblFavoritos.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblFuncionario.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblGenero.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblGeneroProduto.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLeitor.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblProduto.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblReserva.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblTipoLeitor.cs">
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TccModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TccModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TccModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TccModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TccModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TccModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserPrincipal.cs" />
     <Compile Include="Services\Authentication.cs" />
     <Compile Include="Services\Authorization.cs" />
-    <Compile Include="Services\DbManager.cs" />
-    <Compile Include="Models\Emprestimo.cs" />
-    <Compile Include="Models\Evento.cs" />
-    <Compile Include="Models\Funcionario.cs" />
-    <Compile Include="Models\Leitor.cs" />
-    <Compile Include="Models\Produto.cs" />
-    <Compile Include="Models\Reserva.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Models\TccModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TccModel.edmx</DependentUpon>
+      <LastGenOutput>TccModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\TccModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TccModel.edmx</DependentUpon>
+      <LastGenOutput>TccModel.cs</LastGenOutput>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -191,7 +242,17 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <EntityDeploy Include="Models\TccModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TccModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\TccModel.edmx.diagram">
+      <DependentUpon>TccModel.edmx</DependentUpon>
+    </Content>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -226,7 +287,10 @@
       <ErrorText>Este projeto faz referência a pacotes do NuGet que não estão presentes neste computador. Use a Restauração de Pacotes do NuGet para baixá-los.  Para obter mais informações, consulte http://go.microsoft.com/fwlink/?LinkID=322105. O arquivo ausente é {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
   </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

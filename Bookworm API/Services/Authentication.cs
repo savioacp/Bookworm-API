@@ -15,9 +15,7 @@ namespace Bookworm_API.Services
 		static RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
 		static int ITERATIONS = 10000;
 
-
-		
-		public static bool RegisterUser(Leitor user, string plaintextPassword)
+		public static bool RegisterUser(tblLeitor user, string plaintextPassword)
 		{
 			Rfc2898DeriveBytes hash;
 			var generatedSaltBytes = new byte[16];
@@ -31,9 +29,10 @@ namespace Bookworm_API.Services
 			hash.Dispose();
 			var _params = new 
 			{
-				id = user.Id,
+				id = user.IDLeitor,
 				senha = digestedHashedPassword,
-				salt = BitConverter.ToString(generatedSaltBytes).Replace("-", "").ToLower()
+				tipoLeitor= user.IDTipoLeitor,
+				salt = BitConverter.ToString(generatedSaltBytes).Replace("-", "").ToLower(),
 			};
 
 			if (DbManager.Connection.Execute("update tblLeitor set Salt=@salt, Senha=@senha where IDLeitor=@id", _params) < 1) return false;
@@ -41,12 +40,12 @@ namespace Bookworm_API.Services
 			return true;
 		}
 
-		public static bool LogUserIn(Leitor user, string plaintextPassword)
+		public static bool LogUserIn(tblLeitor user, string plaintextPassword)
 		{
 			//sif (DbManager.Connection.ExecuteScalar<int>("select count(*) from tblLeitor where IdLeitor=@IdLeitor", new { IdLeitor = user.Id }) < 1) return false;
 
 			Rfc2898DeriveBytes hash;
-			(string digestedSalt, string digestedHash) = DbManager.Connection.QueryFirst<(string, string)>("select Salt, Senha from tblLeitor where IdLeitor = @IdLeitor", new { IdLeitor = user.Id });
+			(string digestedSalt, string digestedHash) = DbManager.Connection.QueryFirst<(string, string)>("select Salt, Senha from tblLeitor where IdLeitor = @IdLeitor", new { IdLeitor = user.IDLeitor });
 
 			var saltBytes = StringToByteArray(digestedSalt);
 
@@ -63,22 +62,7 @@ namespace Bookworm_API.Services
 
 		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		public static byte[] StringToByteArray(string hex)
+		private static byte[] StringToByteArray(string hex)
 		{
 			if (hex.Length % 2 == 1)
 				throw new Exception("The binary key cannot have an odd number of digits");
@@ -93,7 +77,7 @@ namespace Bookworm_API.Services
 			return arr;
 		}
 
-		public static int GetHexVal(char hex)
+		private static int GetHexVal(char hex)
 		{
 			int val = hex;
 			return val - (val < 58 ? 48 : (val < 97 ? 55 : 87));

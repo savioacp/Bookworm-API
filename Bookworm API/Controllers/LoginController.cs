@@ -11,19 +11,29 @@ namespace Bookworm_API.Controllers
 {
     public class LoginController : ApiController
     {
-        public JsonResult<object> Post([FromBody]Login value)
+        public struct LoginData
+		{
+            public string Email;
+            public string Senha;
+		}
+
+        public JsonResult<object> PostUser([FromBody] LoginData login)
         {
-            var currentLeitor = Leitor.GetLeitor(value.Email);
-            if (Authentication.LogUserIn(currentLeitor, value.Senha))
+            using (var db = new TccSettings()) {
+                /*Leitor currentLeitor = Leitor.GetLeitor(login.Email);*/
+                var leitor = db.tblLeitor.FirstOrDefault(l => l.Email == login.Email);
+                if (Authentication.LogUserIn(leitor, login.Senha))
+                    return Json(new
+                    {
+                        Code = 200,
+                        Token = Authorization.GenerateJWT(leitor)
+                    } as object);
                 return Json(new
                 {
-                    Code = 200,
-                    Token = Authorization.GenerateJWT(currentLeitor)
+                    Code = 402
                 } as object);
-            return Json(new 
-            { 
-                Code = 402
-            } as object);
+
+            }
         }
     }
 }

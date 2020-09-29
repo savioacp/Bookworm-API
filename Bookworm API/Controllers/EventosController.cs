@@ -13,55 +13,86 @@ namespace Bookworm_API.Controllers
     public class EventosController : ApiController
     {
         // GET /eventos
-        public JsonResult<Evento[]> Get()
+        public JsonResult<object> Get(int page = 1, int results = 20)
         {
-            return Json(Evento.GetEventos());
+            using (var db = new TccSettings())
+			{
+                var eventCount = db.tblEvento.Count();
+
+                if (page * results > eventCount)
+                    return Json(new
+                    {
+                        total_count = eventCount,
+                        count = 0,
+                        eventos = new object[] { }
+                    } as object);
+
+                var eventos = db.tblEvento.OrderByDescending(p => p.IDEvento)
+                    .Skip(page * results)
+                    .Take(results)
+                    .ToArray();
+
+                return Json(new 
+                { 
+                    total_count = eventCount,
+                    count = eventos.Count(),
+                    eventos
+                } as object);
+
+            }
         }
 
         // POST /eventos
-        public JsonResult<Evento> Post(Evento e)
+        public JsonResult<object> Post(dynamic e)
         {   
-            return Json(e.Add());
+            using (var db = new TccSettings())
+			{
+                var addedEvent = db.tblEvento.Add(new tblEvento
+                {
+                    Email = e.Email,
+                    Descricao = e.Descricao,
+                    Responsavel = e.Responsavel,
+                    Titulo = e.Titulo,
+                });
+
+                return Json(addedEvent as object);
+			}
         }
 
 
         // GET /eventos/{id}
-        public JsonResult<object> Get(int id)
+        public IHttpActionResult Get(int id)
         {
-            try
-            {
-                return Json(Evento.GetEvento(id) as object);
-            }
-            catch (IndexOutOfRangeException)
-            {
-                return Json(new
-                {
-                    Code = 404,
-                    Message = "Evento não encontrado"
-                } as object);
+            using (var db = new TccSettings())
+			{
+                var evento = db.tblEvento.FirstOrDefault(e => e.IDEvento == id);
+
+                if (evento == null)
+                    return NotFound();
+
+                return Json(evento);
             }
         }
 
         // PUT /eventos/{id}
-        public JsonResult<object> Put(int id, Evento e)
+        public IHttpActionResult Put(int id, tblEvento e)
         {
             try
             {
-                Evento _e = Evento.GetEvento(id);
-                _e.Titulo = e.Titulo ?? _e.Titulo;
-                _e.Descrição = e.Descrição ?? _e.Descrição;
-                _e.Email = e.Email ?? _e.Email;
-                _e.Responsável = e.Responsável ?? _e.Responsável;
+                using (var db = new TccSettings()) {
+                    tblEvento _e = db.tblEvento.First(i => i.IDEvento == id);
+                    _e.Titulo = e.Titulo ?? _e.Titulo;
+                    _e.Descricao = e.Descricao ?? _e.Descricao;
+                    _e.Email = e.Email ?? _e.Email;
+                    _e.Responsavel = e.Responsavel ?? _e.Responsavel;
 
-                return Json(_e.Commit() as object);
+                    db.SaveChanges();
+                    return Json(_e as object);
+                }
             }
-            catch (IndexOutOfRangeException)
+            catch (Exception)
             {
-                return Json(new
-                {
-                    Error=404,
-                    Message="Evento não encontrado"
-                } as object);
+                return NotFound();
             }
         }
 
@@ -70,7 +101,8 @@ namespace Bookworm_API.Controllers
         {
             try
             {
-                Evento.GetEvento(id).Delete();
+                using (var db = new TccSettings())
+                    db.tblEvento.Remove(db.tblEvento.Find(id));
                 return StatusCode(HttpStatusCode.OK);
             }
             catch (IndexOutOfRangeException)
@@ -81,9 +113,31 @@ namespace Bookworm_API.Controllers
 
         // GET /eventos/search/{q}
         [Route("eventos/search/{q}")]
-        public JsonResult<Evento[]> Get(string q)
+        public IHttpActionResult Get(string q, int page = 1, int results = 20)
         {
-            return Json(Evento.GetEventos(q));
+            using(var db = new TccSettings())
+			{
+                var searchResults = db.tblEvento.Where(p => p.Titulo.Contains(q) || p.IDEvento.ToString().Contains(q));
+                int resultCount = searchResults.Count();
+                if (page * results > searchResults.Count())
+                    return Json(new
+                    {
+                        count = 0,
+                        total_count = resultCount,
+                        eventos = new object[] { }
+                    }) ;
+
+                searchResults = searchResults
+                    .Skip(page * results)
+                    .Take(results);
+
+                return Json(new
+                {
+                    count = searchResults.Count(),
+                    total_count = resultCount,
+                    eventos = searchResults.ToArray()
+                }) ;
+			}
         }
     }
 }
