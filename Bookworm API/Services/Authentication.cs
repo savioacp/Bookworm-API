@@ -27,25 +27,31 @@ namespace Bookworm_API.Services
 			var digestedHashedPassword = BitConverter.ToString(hash.GetBytes(16)).Replace("-","").ToLower();
 
 			hash.Dispose();
-			var _params = new 
-			{
-				id = user.IDLeitor,
-				senha = digestedHashedPassword,
-				tipoLeitor= user.IDTipoLeitor,
-				salt = BitConverter.ToString(generatedSaltBytes).Replace("-", "").ToLower(),
-			};
 
-			if (DbManager.Connection.Execute("update tblLeitor set Salt=@salt, Senha=@senha where IDLeitor=@id", _params) < 1) return false;
+			using(var db = new TccSettings())
+            {
+				var leitor = db.tblLeitor.First(l => l.IDLeitor == user.IDLeitor);
+				leitor.Salt = BitConverter.ToString(generatedSaltBytes).Replace("-", "").ToLower();
+				leitor.Senha = digestedHashedPassword;
+
+				db.SaveChanges();
+			}
 
 			return true;
 		}
 
 		public static bool LogUserIn(tblLeitor user, string plaintextPassword)
 		{
-			//sif (DbManager.Connection.ExecuteScalar<int>("select count(*) from tblLeitor where IdLeitor=@IdLeitor", new { IdLeitor = user.Id }) < 1) return false;
 
 			Rfc2898DeriveBytes hash;
-			(string digestedSalt, string digestedHash) = DbManager.Connection.QueryFirst<(string, string)>("select Salt, Senha from tblLeitor where IdLeitor = @IdLeitor", new { IdLeitor = user.IDLeitor });
+			(string digestedSalt, string digestedHash) = ("", "");
+			
+			using(var db = new TccSettings())
+            {
+				var credentials = db.tblLeitor.Where(l => l.IDLeitor == user.IDLeitor).Select(l => new { l.Salt, l.Senha }).First();
+				digestedHash = credentials.Senha;
+				digestedSalt = credentials.Salt;
+            }
 
 			var saltBytes = StringToByteArray(digestedSalt);
 
