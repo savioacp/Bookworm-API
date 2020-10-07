@@ -6,7 +6,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Web;
-using Dapper;
 
 namespace Bookworm_API.Services
 {

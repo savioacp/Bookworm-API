@@ -162,6 +162,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="JWTMiddleware.cs" />
     <Compile Include="Models\PagedResult.cs" />
     <Compile Include="Models\tblCargo.cs">
       <DependentUpon>TccModel.tt</DependentUpon>

@@ -1,5 +1,4 @@
 ﻿using Bookworm_API.Services;
-using Dapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
