@@ -36,13 +36,18 @@ namespace Bookworm_API.Controllers
         }
 
 
-        public IHttpActionResult Post(dynamic leitor)
+        public IHttpActionResult Post(dynamic _leitor)
         {
+            var leitor = (_leitor as Newtonsoft.Json.Linq.JObject).ToObject<tblLeitor>();
             using (var db = new TccSettings())
             {
+                leitor.IDLeitor = (db.tblLeitor.OrderByDescending(l => l.IDLeitor).FirstOrDefault()?.IDLeitor ?? 0) + 1;
+                leitor.Senha = "";
+                leitor.Salt = "";
+                leitor.DataCadastro = DateTime.Now;
                 var addedLeitor = db.tblLeitor.Add(leitor);
                 db.SaveChanges();
-                return Json(leitor);
+                return Json(addedLeitor);
             }
         }
 
@@ -101,7 +106,7 @@ namespace Bookworm_API.Controllers
             using (var db = new TccSettings())
             {
                 db.tblLeitor.Remove(db.tblLeitor.First(l => l.IDLeitor == id));
-                return StatusCode(HttpStatusCode.OK);
+                return StatusCode(HttpStatusCode.NoContent);
             }
         }
     }

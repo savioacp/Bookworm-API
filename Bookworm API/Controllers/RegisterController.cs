@@ -32,7 +32,7 @@ namespace Bookworm_API.Controllers
             //        Message = "Não autorizado"
             //    } as object);
             using(var db = new TccSettings())
-                if (Authentication.RegisterUser(db.tblLeitor.First(l => l.Email == value.Email), value.Senha))
+                if (Authentication.RegisterUser(db.tblLeitor.FirstOrDefault(l => l.Email == value.Email), value.Senha))
                     return Json(new
                     {
                         Code = 200,
