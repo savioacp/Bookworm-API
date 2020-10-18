@@ -159,8 +159,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LeitorController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ProdutosController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
-    <Compile Include="Controllers\ResevaController.cs" />
+    <Compile Include="Controllers\ReservaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
