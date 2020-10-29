@@ -17,7 +17,7 @@ namespace Bookworm_API.Controllers
             using (var db = new TccSettings())
 			{
                 int prodCount = db.tblProduto.Count();
-                if (page * results > prodCount)
+                if ((page - 1) * results > prodCount)
                     return Json(new 
                     { 
                         total_count = prodCount,
@@ -26,7 +26,7 @@ namespace Bookworm_API.Controllers
                     } as object);
                 
                 var produtos = db.tblProduto.OrderByDescending(p => p.IDProduto)
-                    .Skip(page * results)
+                    .Skip((page - 1) * results)
                     .Take(results)
                     .Select(p => new { 
                         p.AnoEdicao, 
@@ -59,7 +59,7 @@ namespace Bookworm_API.Controllers
             using (var db = new TccSettings())
             {
                 int prodCount = db.tblProduto.Count();
-                if (page * results > prodCount)
+                if ((page - 1) * results > prodCount)
                     return Json(new
                     {
                         total_count = prodCount,
@@ -70,7 +70,7 @@ namespace Bookworm_API.Controllers
                 var produtos = db.tblProduto
                     .Where(p => p.Editora.Contains(query) || p.NomeLivro.Contains(query) || p.AutoresLivro.Contains(query))
                     .OrderByDescending(p => p.IDProduto)
-                    .Skip(page * results)
+                    .Skip((page - 1) * results)
                     .Take(results)
                     .Select(p => new {
                         p.AnoEdicao,
