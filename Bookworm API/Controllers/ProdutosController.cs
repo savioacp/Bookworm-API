@@ -1,6 +1,7 @@
 ﻿using Bookworm_API.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -25,7 +26,8 @@ namespace Bookworm_API.Controllers
                         produtos = new object[] { }
                     } as object);
                 
-                var produtos = db.tblProduto.OrderByDescending(p => p.IDProduto)
+                var produtos = db.tblProduto
+                    .OrderByDescending(p => p.IDProduto)
                     .Skip((page - 1) * results)
                     .Take(results)
                     .Select(p => new { 
@@ -40,8 +42,8 @@ namespace Bookworm_API.Controllers
                         p.NomeLivro, 
                         p.Prateleira, 
                         p.Setor, 
-                        Generos = p.tblGeneroProduto.Select(gp => gp.tblGenero),
-                        Reservas= p.tblReserva.OrderByDescending(r => r.DataReserva),
+                        Generos = p.tblGeneroProduto.Select(gp => gp.tblGenero.NomeGenero).ToList(),
+                        Reservas= p.tblReserva.OrderByDescending(r => r.DataReserva).ToList(),
                         p.TipoAcervo,
                         p.TipoProduto,
                     })
@@ -70,7 +72,7 @@ namespace Bookworm_API.Controllers
                     } as object);
 
                 var produtos = db.tblProduto
-                    .Where(p => p.Editora.Contains(query) || p.NomeLivro.Contains(query) || p.AutoresLivro.Contains(query))
+                    .Where(p => p.Editora.ToLower().Contains(query) || p.NomeLivro.ToLower().Contains(query) || p.AutoresLivro.ToLower().Contains(query))
                     .OrderByDescending(p => p.IDProduto)
                     .Skip((page - 1) * results)
                     .Take(results)
@@ -86,8 +88,8 @@ namespace Bookworm_API.Controllers
                         p.NomeLivro,
                         p.Prateleira,
                         p.Setor,
-                        Generos = p.tblGeneroProduto.Select(gp => gp.tblGenero),
-                        Reservas = p.tblReserva.OrderByDescending(r => r.DataReserva),
+                        Generos = p.tblGeneroProduto.Select(gp => gp.tblGenero.NomeGenero).ToList(),
+                        Reservas = p.tblReserva.OrderByDescending(r => r.DataReserva).ToList(),
                         p.TipoAcervo,
                         p.TipoProduto,
                     })
