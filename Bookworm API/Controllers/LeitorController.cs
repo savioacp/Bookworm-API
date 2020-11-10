@@ -24,7 +24,27 @@ namespace Bookworm_API.Controllers
                         leitores = new object[] { }
                     });
 
-                var leitores = db.tblLeitor.Skip(page * results).Take(results).ToArray();
+                var leitores = db.tblLeitor.OrderBy(l => l.IDLeitor).Skip((page- 1) * results).Take(results)
+                    .Select(l => new 
+                    {
+                        l.IDLeitor,
+                        l.RG,
+                        l.CPF,
+                        l.DataCadastro,
+                        l.DataNasc,
+                        l.Email,
+                        l.Endereco,
+                        l.ImagemLeitor,
+                        l.tblTipoLeitor.TipoLeitor,
+                        l.Nome,
+                        l.Telefone,
+                        Reservas = l.tblReserva.Select(r => new
+                        {
+                            r.IDReserva,
+                            r.IDProduto
+                        }).ToList()
+                    })
+                    .ToList();
 
                 return Json(new
                 {
@@ -57,18 +77,25 @@ namespace Bookworm_API.Controllers
 
             using (var db = new TccSettings())
             {
-                var leitor = db.tblLeitor.Select(l => new
+                var leitor = db.tblLeitor
+                    .Select(l => new
                 {
                     l.IDLeitor,
-                    TipoLeitor = l.tblTipoLeitor,
-                    l.Nome,
                     l.RG,
                     l.CPF,
                     l.DataCadastro,
                     l.DataNasc,
                     l.Email,
                     l.Endereco,
-                    ImagemLeitor = Convert.ToBase64String(l.ImagemLeitor),
+                    l.ImagemLeitor,
+                    l.tblTipoLeitor.TipoLeitor,
+                    l.Nome,
+                    l.Telefone,
+                    Reservas = l.tblReserva.Select(r => new
+                    {
+                        r.IDReserva,
+                        r.IDProduto
+                    }).ToList()
                 }).First(l => l.IDLeitor == id);
                 return Json(leitor);
             }
