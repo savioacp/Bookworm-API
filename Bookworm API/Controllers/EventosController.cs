@@ -28,7 +28,7 @@ namespace Bookworm_API.Controllers
                     } as object);
 
                 var eventos = db.tblEvento.OrderByDescending(p => p.IDEvento)
-                    .Skip(page * results)
+                    .Skip((page - 1) * results)
                     .Take(results)
                     .ToArray();
 
@@ -128,7 +128,7 @@ namespace Bookworm_API.Controllers
                     }) ;
 
                 searchResults = searchResults
-                    .Skip(page * results)
+                    .Skip((page - 1) * results)
                     .Take(results);
 
                 return Json(new
