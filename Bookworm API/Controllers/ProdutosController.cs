@@ -27,6 +27,9 @@ namespace Bookworm_API.Controllers
                     } as object);
                 
                 var produtos = db.tblProduto
+                    .Include("tblGeneroProduto")
+                    .Include("tblReserva")
+                    .Include("tblGenero")
                     .OrderByDescending(p => p.IDProduto)
                     .Skip((page - 1) * results)
                     .Take(results)
@@ -81,6 +84,9 @@ namespace Bookworm_API.Controllers
                     } as object);
 
                 var produtos = db.tblProduto
+                    .Include("tblGeneroProduto")
+                    .Include("tblReserva")
+                    .Include("tblGenero")
                     .Where(p => p.Editora.ToLower().Contains(query) || p.NomeLivro.ToLower().Contains(query) || p.AutoresLivro.ToLower().Contains(query))
                     .OrderByDescending(p => p.IDProduto)
                     .Skip((page - 1) * results)
