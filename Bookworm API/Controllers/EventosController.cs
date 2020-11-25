@@ -19,7 +19,7 @@ namespace Bookworm_API.Controllers
 			{
                 var eventCount = db.tblEvento.Count();
 
-                if (page * results > eventCount)
+                if ((page - 1) * results > eventCount)
                     return Json(new
                     {
                         total_count = eventCount,
@@ -119,7 +119,7 @@ namespace Bookworm_API.Controllers
 			{
                 var searchResults = db.tblEvento.Where(p => p.Titulo.Contains(q) || p.IDEvento.ToString().Contains(q));
                 int resultCount = searchResults.Count();
-                if (page * results > searchResults.Count())
+                if ((page - 1) * results > searchResults.Count())
                     return Json(new
                     {
                         count = 0,
