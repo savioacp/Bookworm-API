@@ -47,20 +47,10 @@ namespace Bookworm_API.Middlewares
 			if(claimsIdentity == null)
 				return request.CreateErrorResponse(HttpStatusCode.BadRequest, "Empty Claims");
 
-			UserKind kind;
-			try
-			{
-				kind = (UserKind)Enum.Parse(typeof(UserKind), claimsIdentity.FindFirst("UserKind").Value);
-			}
-			catch
-			{
-				return request.CreateErrorResponse(HttpStatusCode.BadRequest, "Malformed Token");
-			}
-			var userId = Int32.Parse(claimsIdentity.FindFirst("UserId").Value);
+			var userId = int.Parse(claimsIdentity.FindFirst("UserId").Value);
 
 			using(var db = new TccSettings())
-				SetPrincipal(new UserPrincipal(db.tblLeitor.First(l => l.IDLeitor == userId)));
-
+				SetPrincipal(new UserPrincipal(db.tblLeitor.Include("tblTipoLeitor").First(l => l.IDLeitor == userId)));
 
 
 			return Next(_);

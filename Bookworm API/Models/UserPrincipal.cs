@@ -10,7 +10,7 @@ namespace Bookworm_API.Models
 {
 	public enum UserKind
 	{
-		Leitor, Funcionario
+		Leitor = 1, Funcionario
 	}
 	public class UserPrincipal : IPrincipal
 	{

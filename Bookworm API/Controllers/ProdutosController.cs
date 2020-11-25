@@ -14,18 +14,20 @@ namespace Bookworm_API.Controllers
     public class ProdutosController : ApiController
     {
         public JsonResult<object> Get(int page = 1, int results = 20)
-		{
+        {
             using (var db = new TccSettings())
-			{
+            {
                 int prodCount = db.tblProduto.Count();
                 if ((page - 1) * results > prodCount)
-                    return Json(new 
-                    { 
+                    return Json(new
+                    {
                         total_count = prodCount,
                         count = 0,
                         produtos = new object[] { }
                     } as object);
-                
+
+                var SeteDiasAtrás = DateTime.Now.AddDays(-7);
+
                 var produtos = db.tblProduto
                     .Include("tblGeneroProduto")
                     .Include("tblReserva")
@@ -34,20 +36,32 @@ namespace Bookworm_API.Controllers
                     .OrderByDescending(p => p.IDProduto)
                     .Skip((page - 1) * results)
                     .Take(results)
-                    .Select(p => new { 
-                        p.AnoEdicao, 
-                        p.AutoresLivro, 
-                        p.DescricaoProd, 
-                        p.Editora, 
-                        p.Fileira, 
+                    .Select(p => new
+                    {
+                        p.AnoEdicao,
+                        p.AutoresLivro,
+                        p.DescricaoProd,
+                        p.Editora,
+                        p.Fileira,
                         p.IDProduto,
                         p.ISBN,
-                        p.ImagemProd, 
-                        p.NomeLivro, 
-                        p.Prateleira, 
-                        p.Setor, 
-                        Generos = p.tblGeneroProduto.Select(gp => gp.tblGenero.NomeGenero).ToList(),
-                        Reservas= p.tblReserva.OrderByDescending(r => r.DataReserva).ToList(),
+                        p.ImagemProd,
+                        p.NomeLivro,
+                        p.Prateleira,
+                        p.Setor,
+                        Generos = p.tblGeneroProduto
+                            .Select(gp => gp.tblGenero.NomeGenero)
+                            .ToList(),
+
+                        Reservas = p.tblReserva
+                            .Where(r => r.DataReserva > SeteDiasAtrás)
+                            .OrderByDescending(r => r.IDReserva)
+                            .Select(
+                            r => new
+                            {
+                                r.IDReserva,
+                                r.DataReserva,
+                            }).ToList(),
                         p.TipoAcervo,
                         p.TipoProduto,
                     })
@@ -84,6 +98,8 @@ namespace Bookworm_API.Controllers
                         produtos = new object[] { }
                     } as object);
 
+                var SeteDiasAtrás = DateTime.Now.AddDays(-7);
+
                 var produtos = db.tblProduto
                     .Include("tblGeneroProduto")
                     .Include("tblReserva")
@@ -93,7 +109,8 @@ namespace Bookworm_API.Controllers
                     .OrderByDescending(p => p.IDProduto)
                     .Skip((page - 1) * results)
                     .Take(results)
-                    .Select(p => new {
+                    .Select(p => new
+                    {
                         p.AnoEdicao,
                         p.AutoresLivro,
                         p.DescricaoProd,
@@ -105,8 +122,19 @@ namespace Bookworm_API.Controllers
                         p.NomeLivro,
                         p.Prateleira,
                         p.Setor,
-                        Generos = p.tblGeneroProduto.Select(gp => gp.tblGenero.NomeGenero).ToList(),
-                        Reservas = p.tblReserva.OrderByDescending(r => r.DataReserva).ToList(),
+                        Generos = p.tblGeneroProduto
+                            .Select(gp => gp.tblGenero.NomeGenero)
+                            .ToList(),
+
+                        Reservas = p.tblReserva
+                            .Where(r => r.DataReserva > SeteDiasAtrás)
+                            .OrderByDescending(r => r.IDReserva)
+                            .Select(
+                                r => new
+                                {
+                                    r.IDReserva,
+                                    r.DataReserva,
+                                }).ToList(),
                         p.TipoAcervo,
                         p.TipoProduto,
                     })

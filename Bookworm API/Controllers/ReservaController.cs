@@ -2,6 +2,7 @@
 using Bookworm_API.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -19,7 +20,7 @@ namespace Bookworm_API.Controllers
 
             using (var db = new TccSettings())
             {
-                if (db.tblReserva.Count(r => r.IDProduto == idLivro && r.DataReserva.AddDays(7) > DateTime.Now) > 1)
+                if (db.tblReserva.Count(r => r.IDProduto == idLivro && DbFunctions.AddDays(r.DataReserva, 7) > DateTime.Now) > 1)
                     return Json(new { 
                         Code = 400,
                         Message = "Reserva indisponível"

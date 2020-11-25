@@ -15,8 +15,7 @@ namespace Bookworm_API.Services
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var claims = new[] {
-                new Claim("UserId", $"{leitor.IDLeitor}"),
-                new Claim("UserType", $"{leitor.IDTipoLeitor}")
+                new Claim("UserId", $"{leitor.IDLeitor}")
             };
 
             var token = tokenHandler.CreateJwtSecurityToken(
