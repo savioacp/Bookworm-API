@@ -58,6 +58,15 @@ namespace Bookworm_API.Controllers
             }
         }
 
+        [Route("produtos/count")]
+        public IHttpActionResult Get([FromUri] string isbn)
+        {
+            using (var db = new TccSettings())
+            {
+                var count = db.tblProduto.Select(p => p.ISBN == isbn).Count();
+                return Json(count);
+            }
+        }
         public JsonResult<object> Get(string query, int page = 1, int results = 20)
         {
             using (var db = new TccSettings())
