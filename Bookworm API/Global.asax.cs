@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Bookworm_API.Models;
+using dotenv.net;
 
 namespace Bookworm_API
 {
@@ -20,10 +21,8 @@ namespace Bookworm_API
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            
 
-            //TODO: Atualizar models para o novo banco
-            //TODO: Authorization
+            DotEnv.AutoConfig();
         }
 
         
