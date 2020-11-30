@@ -1,6 +1,7 @@
 ﻿using Bookworm_API.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -24,8 +25,8 @@ namespace Bookworm_API.Controllers
                         leitores = new object[] { }
                     });
 
-                var leitores = db.tblLeitor.OrderBy(l => l.IDLeitor).Skip((page- 1) * results).Take(results)
-                    .Select(l => new 
+                var leitores = db.tblLeitor.OrderBy(l => l.IDLeitor).Skip((page - 1) * results).Take(results)
+                    .Select(l => new
                     {
                         l.IDLeitor,
                         l.RG,
@@ -43,7 +44,7 @@ namespace Bookworm_API.Controllers
                             r.IDReserva,
                             r.IDProduto
                         }).ToList(),
-                        Favoritos = l.tblFavoritos.Select(f => new 
+                        Favoritos = l.tblFavoritos.Select(f => new
                         {
                             f.IDProduto
                         })
@@ -83,24 +84,24 @@ namespace Bookworm_API.Controllers
             {
                 var leitor = db.tblLeitor
                     .Select(l => new
-                {
-                    l.IDLeitor,
-                    l.RG,
-                    l.CPF,
-                    l.DataCadastro,
-                    l.DataNasc,
-                    l.Email,
-                    l.Endereco,
-                    l.ImagemLeitor,
-                    l.tblTipoLeitor.TipoLeitor,
-                    l.Nome,
-                    l.Telefone,
-                    Reservas = l.tblReserva.Select(r => new
                     {
-                        r.IDReserva,
-                        r.IDProduto
-                    }).ToList()
-                }).First(l => l.IDLeitor == id);
+                        l.IDLeitor,
+                        l.RG,
+                        l.CPF,
+                        l.DataCadastro,
+                        l.DataNasc,
+                        l.Email,
+                        l.Endereco,
+                        l.ImagemLeitor,
+                        l.tblTipoLeitor.TipoLeitor,
+                        l.Nome,
+                        l.Telefone,
+                        Reservas = l.tblReserva.Select(r => new
+                        {
+                            r.IDReserva,
+                            r.IDProduto
+                        }).ToList()
+                    }).First(l => l.IDLeitor == id);
                 return Json(leitor);
             }
         }
@@ -130,6 +131,41 @@ namespace Bookworm_API.Controllers
                         e.Message
                     });
                 }
+        }
+
+        [Route("leitor/{id:int}/favoritos")]
+        public IHttpActionResult Put(int id, int[] favs)
+        {
+            using (var db = new TccSettings())
+            {
+                try
+                {
+                    var livros = (from l in db.tblProduto
+                                  where favs.Contains(l.IDProduto)
+                                  select l).ToList();
+
+                    var amiguinho = (from l in db.tblLeitor
+                                     where l.IDLeitor == id
+                                     select l).First();
+
+                    amiguinho.tblFavoritos = livros.Select(l => new tblFavoritos()
+                    {
+                        IDProduto = l.IDProduto
+                    }).ToList();
+
+                    db.SaveChanges();
+
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    return Json(new
+                    {
+                        Code = 404,
+                        e.Message
+                    });
+                }
+            }
         }
 
         public IHttpActionResult Delete(int id)
