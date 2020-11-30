@@ -42,7 +42,11 @@ namespace Bookworm_API.Controllers
                         {
                             r.IDReserva,
                             r.IDProduto
-                        }).ToList()
+                        }).ToList(),
+                        Favoritos = l.tblFavoritos.Select(f => new 
+                        {
+                            f.IDProduto
+                        })
                     })
                     .ToList();
 
@@ -106,7 +110,7 @@ namespace Bookworm_API.Controllers
             using (var db = new TccSettings())
                 try
                 {
-                    tblLeitor _leitor = db.tblLeitor.First(l => l.IDLeitor == id);
+                    tblLeitor _leitor = db.tblLeitor.Include("tblEmprestimo").Include("tblFavoritos").First(l => l.IDLeitor == id);
                     _leitor.Nome = leitor.Nome ?? _leitor.Nome;
                     _leitor.CPF = leitor.CPF ?? _leitor.CPF;
                     _leitor.RG = leitor.RG ?? _leitor.RG;
