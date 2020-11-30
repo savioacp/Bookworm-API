@@ -81,10 +81,25 @@ namespace Bookworm_API.Controllers
         {
             using (var db = new TccSettings())
             {
-                var count = db.tblProduto.Select(p => p.ISBN == isbn).Count();
+                var count = db.tblProduto.Count(p => p.ISBN == isbn);
                 return Json(count);
             }
         }
+
+        [Route("produtos/count")]
+        public IHttpActionResult Get([FromUri] string isbn, string reservas)
+        {
+            using (var db = new TccSettings())
+            {
+                var count = 
+                    from p in db.tblProduto
+                    where p.ISBN == isbn
+                    select p.tblReserva.Count;
+
+                return Json(count.Sum());
+            }
+        }
+
         public JsonResult<object> Get(string query, int page = 1, int results = 20)
         {
             using (var db = new TccSettings())
