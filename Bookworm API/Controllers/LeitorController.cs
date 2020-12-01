@@ -121,7 +121,7 @@ namespace Bookworm_API.Controllers
                     _leitor.Telefone = leitor.Telefone ?? _leitor.Telefone;
                     _leitor.Endereco = leitor.Endereco ?? _leitor.Endereco;
                     db.SaveChanges();
-                    return Json(_leitor);
+                    return Ok();
                 }
                 catch (Exception e)
                 {
