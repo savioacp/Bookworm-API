@@ -46,10 +46,7 @@ namespace Bookworm_API.Controllers
                             r.IDReserva,
                             r.IDProduto
                         }).ToList(),
-                        Favoritos = l.tblFavoritos.Select(f => new
-                        {
-                            f.IDProduto
-                        })
+                        Favoritos = l.tblFavoritos.Select(f => f.IDProduto).ToList()
                     })
                     .ToList();
 
@@ -105,10 +102,7 @@ namespace Bookworm_API.Controllers
                             r.IDReserva,
                             r.IDProduto
                         }).ToList(),
-                        Favoritos = l.tblFavoritos.Select(f => new
-                        {
-                            f.IDProduto
-                        }).ToList()
+                        Favoritos = l.tblFavoritos.Select(f => f.IDProduto).ToList()
                     }).First(l => l.IDLeitor == id);
                 return Json(leitor);
             }
