@@ -25,7 +25,9 @@ namespace Bookworm_API.Controllers
                         leitores = new object[] { }
                     });
 
-                var leitores = db.tblLeitor.OrderBy(l => l.IDLeitor).Skip((page - 1) * results).Take(results)
+                var leitores = db.tblLeitor
+                    .Include("tbReserva")
+                    .Include("tblFavoritos").OrderBy(l => l.IDLeitor).Skip((page - 1) * results).Take(results)
                     .Select(l => new
                     {
                         l.IDLeitor,
@@ -83,6 +85,8 @@ namespace Bookworm_API.Controllers
             using (var db = new TccSettings())
             {
                 var leitor = db.tblLeitor
+                    .Include("tbReserva")
+                    .Include("tblFavoritos")
                     .Select(l => new
                     {
                         l.IDLeitor,
@@ -100,6 +104,10 @@ namespace Bookworm_API.Controllers
                         {
                             r.IDReserva,
                             r.IDProduto
+                        }).ToList(),
+                        Favoritos = l.tblFavoritos.Select(f => new
+                        {
+                            f.IDProduto
                         }).ToList()
                     }).First(l => l.IDLeitor == id);
                 return Json(leitor);
