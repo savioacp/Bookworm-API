@@ -122,6 +122,7 @@ namespace Bookworm_API.Controllers
                     _leitor.Email = leitor.Email ?? _leitor.Email;
                     _leitor.Telefone = leitor.Telefone ?? _leitor.Telefone;
                     _leitor.Endereco = leitor.Endereco ?? _leitor.Endereco;
+                    _leitor.ImagemLeitor = leitor.ImagemLeitor ?? _leitor.ImagemLeitor;
                     db.SaveChanges();
                     return Ok();
                 }
