@@ -47,8 +47,18 @@ namespace Bookworm_API.Services
 			
 			using(var db = new TccSettings())
             {
-				var credentials = db.tblLeitor.Where(l => l.IDLeitor == user.IDLeitor).Select(l => new { l.Salt, l.Senha }).First();
-				digestedHash = credentials.Senha;
+                dynamic credentials = new {};
+                try
+                {
+                    credentials = db.tblLeitor.Where(l => l.IDLeitor == user.IDLeitor)
+                        .Select(l => new {l.Salt, l.Senha}).First();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+
+                digestedHash = credentials.Senha;
 				digestedSalt = credentials.Salt;
             }
 
